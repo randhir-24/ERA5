@@ -1,0 +1,114 @@
+# ERA5 Climate Data Extraction Script
+
+// Define your study area (ROI)
+var roi = ee.FeatureCollection('projects/ee-randhirsinghecon/assets/state_boundries').geometry();
+
+// Load ERA5-Land Daily Aggregated Climate Data
+var era5 = ee.ImageCollection('ECMWF/ERA5_LAND/DAILY_AGGR')
+             .filterDate('1960-01-01', '2024-12-31')
+             .filterBounds(roi)
+             .select([
+               'temperature_2m', 'temperature_2m_max', 'temperature_2m_min',
+               'total_precipitation_sum', 'total_precipitation_max', 'total_precipitation_min'
+             ]);  // ✅ Extracts all required variables
+
+// Function to compute mean over ROI and convert temperature from Kelvin to Celsius
+  function computeDailyMean(image) {
+  var date = ee.Date(image.get('system:time_start')).format('YYYY-MM-dd');
+  
+  var meanDict = image.reduceRegion({
+    reducer: ee.Reducer.mean(),
+    geometry: roi,
+    scale: 11132,  // Adjust scale if necessary
+    bestEffort: true,
+    maxPixels: 1e13
+  });
+
+  // Skip days with missing data
+  if (
+    meanDict.get('temperature_2m') === null ||
+    meanDict.get('temperature_2m_max') === null ||
+    meanDict.get('temperature_2m_min') === null ||
+    meanDict.get('total_precipitation_sum') === null ||
+    meanDict.get('total_precipitation_max') === null ||
+    meanDict.get('total_precipitation_min') === null
+  ) {
+    return null;  // Exit early if any required data is missing
+  }
+
+  // Convert Temperature from Kelvin to Celsius
+  var temperatureCelsius = ee.Number(meanDict.get('temperature_2m')).subtract(273.15);
+  var temperatureMaxCelsius = ee.Number(meanDict.get('temperature_2m_max')).subtract(273.15);
+  var temperatureMinCelsius = ee.Number(meanDict.get('temperature_2m_min')).subtract(273.15);
+
+  // Precipitation values (cleaned to remove negatives)
+  var precipitationSum = ee.Number(meanDict.get('total_precipitation_sum')).max(0);
+  var precipitationMax = ee.Number(meanDict.get('total_precipitation_max')).max(0);
+  var precipitationMin = ee.Number(meanDict.get('total_precipitation_min')).max(0);
+
+  // Get centroid coordinates of the ROI
+  var centroid = roi.centroid();
+  var lon = centroid.coordinates().get(0);
+  var lat = centroid.coordinates().get(1);
+
+  // Return the processed feature
+  return ee.Feature(null, {
+    'date': date,
+    'latitude': lat,
+    'longitude': lon,
+    'temperature_C': temperatureCelsius,
+    'temperature_max_C': temperatureMaxCelsius,
+    'temperature_min_C': temperatureMinCelsius,
+    'precipitation_sum_mm': precipitationSum,
+    'precipitation_max_mm': precipitationMax,
+    'precipitation_min_mm': precipitationMin
+  });
+}
+// Process each day's image to extract daily average values
+var dailyAverages = era5.map(computeDailyMean);
+
+// Check if data exists
+print('Total Features:', dailyAverages.size());
+
+// Print sample output
+print('Sample Features:', dailyAverages.limit(5));
+
+// Export as CSV to Google Drive
+Export.table.toDrive({
+  collection: dailyAverages,
+  description: 'ERA5_AGGR_Temp_Precip_lat_long_Coords_1960-2024_state_boundries',
+  folder: 'ERA5_Data',
+  fileFormat: 'CSV'
+});
+
+
+## Objective
+This script extracts daily climatic data (temperature and precipitation) for a particular distric of Bihar, India using ERA5-Land Daily Aggregated Climate Data in Google Earth Engine.
+
+## Workflow
+1. Define the region of interest (ROI).
+2. Load ERA5-Land Daily Aggregated Climate Data.
+3. Compute daily means for temperature and precipitation.
+4. Convert temperature from Kelvin to Celsius.
+5. Handle missing or zero data.
+6. Export the processed data as a CSV file.
+
+## Validation Requests
+- Are the selected variables (`temperature_2m`, `total_precipitation_sum`, etc.) appropriate for district-level analysis?
+- Is the method for calculating daily means valid?
+- Does the script handle missing or zero data properly?
+
+## How to Contribute
+- Review the script and sample output.
+- Open issues or submit pull requests with feedback or improvements.
+
+## Sample Output
+
+
+## Contact
+For questions, open an issue or email me at [your-randhirsinghecon@gmail.com].
+## Objective
+This script extracts daily climatic data (temperature and precipitation) for a specific region using ERA5-Land Daily Aggregated Climate Data in Google Earth Engine.
+
+
+
