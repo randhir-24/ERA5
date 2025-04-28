@@ -103,7 +103,18 @@ This script extracts daily climatic data (temperature and precipitation) for a p
 - Open issues or submit pull requests with feedback or improvements.
 
 ## Sample Output
-
+| System Index | Date       | Latitude  | Longitude | Precipitation Max (m) | Precipitation Min (m) | Precipitation Sum (m) | Temperature (°C) | Temperature Max (°C) | Temperature Min (°C) | Geo                                |
+|--------------|------------|-----------|-----------|------------------------|------------------------|------------------------|-------------------|-----------------------|-----------------------|-------------------------------------|
+| 19600101     | 01-01-1960 | 26.19862  | 87.36334  | 8.58E-07              | 0                      | 0.000002              | 17.04554837       | 24.88813244           | 9.61080759            | {"type":"MultiPoint","coordinates":[]} |
+| 19600102     | 02-01-1960 | 26.19862  | 87.36334  | 8.60E-07              | 0                      | 0.0000009             | 17.49808055       | 25.73838937           | 9.859655716           | {"type":"MultiPoint","coordinates":[]} |
+| 19600103     | 03-01-1960 | 26.19862  | 87.36334  | 4.35E-07              | 0                      | 8.64E-07              | 18.59285736       | 26.30692336           | 10.30892178           | {"type":"MultiPoint","coordinates":[]} |
+| 19600104     | 04-01-1960 | 26.19862  | 87.36334  | 4.48E-07              | 0                      | 5.27E-07              | 18.67066971       | 25.78228114           | 11.82036466           | {"type":"MultiPoint","coordinates":[]} |
+| 19600105     | 05-01-1960 | 26.19862  | 87.36334  | 0                      | 0                      | 0                     | 17.82626939       | 25.54949824           | 10.24675953           | {"type":"MultiPoint","coordinates":[]} |
+| 19600106     | 06-01-1960 | 26.19862  | 87.36334  | 4.36E-07              | 0                      | 2.15E-06              | 17.62384748       | 25.11807829           | 10.58846147           | {"type":"MultiPoint","coordinates":[]} |
+| 19600107     | 07-01-1960 | 26.19862  | 87.36334  | 1.72E-06              | 0                      | 2.15E-06              | 17.87079785       | 26.3735773            | 9.820400667           | {"type":"MultiPoint","coordinates":[]} |
+| 19600108     | 08-01-1960 | 26.19862  | 87.36334  | 0                      | 0                      | 0                     | 17.64439793       | 25.76845059           | 9.441084608           | {"type":"MultiPoint","coordinates":[]} |
+| 19600109     | 09-01-1960 | 26.19862  | 87.36334  | 0                      | 0                      | 0                     | 16.85255229       | 24.26583253           | 10.0872853            | {"type":"MultiPoint","coordinates":[]} |
+| 19600110     | 10-01-1960 | 26.19862  | 87.36334  | 4.28E-07              | 0                      | 8.70E-07              | 17.60617594       | 25.08431327           | 10.10745129           | {"type":"MultiPoint","coordinates":[]} |
 
 ## Contact
 For questions, open an issue or email me at [your-randhirsinghecon@gmail.com].
